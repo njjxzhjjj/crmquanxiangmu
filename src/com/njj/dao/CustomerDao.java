@@ -38,19 +38,19 @@ public class CustomerDao {
         //2.写sql
         String sql="select c.* ,t.username as username , t.password as password ,  t.real_name as real_name , t.type as type   from t_customer c  join t_user  t  on c.user_id  = t.id  where 1=1 ";
         if(null!=cust_name&&cust_name.length()>0){
-            sql=sql+" and cust_name like '%"+cust_name+"%'    ";
+            sql=sql+" and c.cust_name like '%"+cust_name+"%'    ";
         }
         if(null!=cust_phone&&cust_phone.length()>0){
-            sql=sql+" and cust_phone = "+cust_phone+"   ";
+            sql=sql+" and c.cust_phone = "+cust_phone+"   ";
         }
         if(null!=cust_sex&&cust_sex.length()>0){
-            sql=sql+" and cust_sex = "+cust_sex+"   ";
+            sql=sql+" and c.cust_sex = "+cust_sex+"   ";
         }
         if(null!=username&&username.length()>0){
-            sql=sql+" and username like '%"+username+"%'  ";
+            sql=sql+" and t.username like '%"+username+"%'  ";
         }
         if(null!=modify_time&&modify_time.length()>0){
-            sql=sql+" and modify_time like '%"+modify_time+"%'  ";
+            sql=sql+" and c.modify_time like '%"+modify_time+"%'  ";
         }
         sql = sql + " and t.is_del=1  ";
         sql = sql + " limit ? , ?";
@@ -106,19 +106,19 @@ public class CustomerDao {
         //2.写sql语句
         String sql = "select count(*)  total from t_customer c join t_user t on c.user_id = t.id where 1=1 ";
         if(null!=cust_name&&cust_name.length()>0){
-            sql=sql+" and cust_name like '%"+cust_name+"%'    ";
+            sql=sql+" and c.cust_name like '%"+cust_name+"%'    ";
         }
         if(null!=cust_phone&&cust_phone.length()>0){
-            sql=sql+" and cust_phone = "+cust_phone+"   ";
+            sql=sql+" and c.cust_phone = "+cust_phone+"   ";
         }
         if(null!=cust_sex&&cust_sex.length()>0){
-            sql=sql+" and cust_sex = "+cust_sex+"   ";
+            sql=sql+" and c.cust_sex = "+cust_sex+"   ";
         }
         if(null!=username&&username.length()>0){
-            sql=sql+" and username like '%"+username+"%'  ";
+            sql=sql+" and t.username like '%"+username+"%'  ";
         }
         if(null!=modify_time&&modify_time.length()>0){
-            sql=sql+" and modify_time like '%"+modify_time+"%'  ";
+            sql=sql+" and c.modify_time like '%"+modify_time+"%'  ";
         }
         System.out.println("sql = " + sql);
         //3.编译
@@ -144,10 +144,11 @@ public class CustomerDao {
     }
 
     public static void main(String[] args) {
-      /*  CustomerDao customerDao=new CustomerDao();
+        CustomerDao customerDao=new CustomerDao();
         Map paramMap=new HashMap();
         paramMap.put("page","1");
        paramMap.put("limit","5");
+       // paramMap.put("cust_name","李小花");
         //CustomerDao customerDao=new CustomerDao();
         List<Map> maps=customerDao.selectAllByParam(paramMap);
         System.out.println("maps = " + maps);
@@ -155,6 +156,6 @@ public class CustomerDao {
 
         //总数
         int i=customerDao.selectAllParamCount(paramMap);
-        System.out.println("i = " + i);*/
+        System.out.println("i = " + i);
     }
 }

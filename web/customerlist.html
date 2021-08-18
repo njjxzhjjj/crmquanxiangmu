@@ -5,8 +5,102 @@
     <title>客户信息管理</title>
     <script src="layui-v2.5.6/layui/layui.js"></script>
     <link rel="stylesheet" href="layui-v2.5.6/layui/css/layui.css">
+
+    <style>
+        #css{
+            width: 1600px;
+            height: 50px;
+        }
+
+    </style>
 </head>
 <body>
+<!--我是增加-->
+<script type="text/html" id="addHtml">
+    <form class="layui-form  layui-form-pane" action="" onsubmit="return false" lay-filter="myUpdate">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">顾客名字</label>
+            <div class="layui-input-inline">
+                <input type="text" name="cust_name" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">顾客公司名字</label>
+            <div class="layui-input-inline">
+                <input type="text" name="cust_company" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">顾客工作</label>
+            <div class="layui-input-inline">
+                <input type="text" name="cust_position" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">顾客联系方式</label>
+            <div class="layui-input-inline">
+                <input type="text" name="cust_phone" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">顾客生日</label>
+            <div class="layui-input-inline">
+                <input type="text" name="cust_birth" class="layui-input" id="cust_birth">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">顾客的性别</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="cust_sex" value="1" title="男" checked="">
+                <input type="radio" name="cust_sex" value="2" title="女">
+                <!--<input type="radio" name="sex" value="禁" title="禁用" disabled="">-->
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">顾客描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" class="layui-textarea" name="cust_desc" ></textarea>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">拜访人</label>
+            <div class="layui-input-inline">
+                <select name="user_id" lay-filter="user_id" id="user_id">
+                    <option value="" selected="">请选择</option>
+                    <!--<option value="1">从后台查询</option>-->
+                    <!--<option value="2">查询非管理员</option>-->
+                </select>
+            </div>
+        </div>
+
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">创建日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="create_time" class="layui-input" id="create_time" >
+            </div>
+        </div>
+
+        <!--下面应该有 提交 或者 返回按钮-->
+        <input class="layui-input"  type="hidden" value="" name="id">
+        <button class="layui-btn layui-hide"   lay-submit lay-filter="myUpdateSubmit" id="myUpdateSubmit">立即提交</button>
+
+
+    </form>
+
+</script>
+
+
 
 <!--//搜索框-->
 <form class="layui-form layui-form-pane" action="" onsubmit="return false">
@@ -40,7 +134,7 @@
 
         <label class="layui-form-label">最后一次拜访时间</label>
         <div class="layui-input-inline">
-            <input type="text" name="modify_time" placeholder="" class="layui-input">
+            <input type="text" name="modify_time" class="layui-input" id="updateTime" placeholder="yyyy-MM-dd HH:mm:ss">
         </div>
 
         <div class="layui-input-inline">
@@ -58,7 +152,10 @@
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
         <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
         <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
-        <button class="layui-btn layui-btn-sm" lay-event="add">新增数据</button>
+
+
+        <button class="layui-btn layui-btn-sm" lay-event="addObj">添加</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delAll">批量删除</button>
     </div>
 </script>
 
@@ -75,6 +172,12 @@
         var $ = layui.jquery;
         var laydate = layui.laydate;
         var layer = layui.layer;
+
+        //日期时间选择器
+        laydate.render({
+            elem: '#updateTime'
+            , type: 'datetime'
+        });
         // table.render 是渲染 上面的 table 表格
         table.render({
             elem: '#test'
@@ -181,6 +284,56 @@
                 case 'isAll':
                     layer.msg(checkStatus.isAll ? '全选' : '未全选');
                     break;
+                case 'addObj':
+                    //layer.msg("这里写添加");
+                    layer.open({
+                        title: '编辑',
+                        area: ['600px', '770px'],
+                        type: 1,
+                        // content:'<h1>你好世界</h1>' //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        content: $("#addHtml").html(),
+                        success: function (layero, index) {
+                            //常规用法
+                            laydate.render({
+                                elem: '#cust_birth'
+                            });
+
+                            form.render();//渲染  当界面发生改变时重新渲染，不然不显示效果
+                            //日期时间选择器
+                            laydate.render({
+                                elem: '#create_time'
+                            });
+                            //发送jaxa，得到的数据渲染到select
+                            $.ajax({
+                                url:'/SelectAllByServiceServlet',
+                                type:'get',
+                                dataType:'json',
+                                success:function (res) {
+                                    console.log(res)
+                                    var select = $("#user_id")
+                                    $.each(res.data,function (index, item) {
+                                        select.append(new Option( item.real_name, item.id));// 下拉菜单里添加元素
+                                    });
+
+                                    layui.form.render("select");
+                                }
+                            })
+                        },
+                        btn: ['确定修改', '取消修改', '其他1', '其他2'],
+                        yes: function (index, layero) {//layero是我们自定义的窗口.   find[[属性名="属性内容"]]里面方括号是属性选择器。
+                            $("#myUpdateSubmit").click();
+                            return false;
+                        },
+                        btn2: function (index, layero) {
+                            alert("我取消了修改")
+                            return false;  //开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+
+                    break;
+                case 'delAll':
+                    layer.msg("这里写全选删除");
+                    break;
 
 
                 /* //自定义头工具栏右侧图标 - 提示
@@ -234,41 +387,8 @@
                     },
                     btn: ['确定修改', '取消修改', '其他1', '其他2'],
                     yes: function (index, layero) {         //layero是我们自定义的窗口.   find[[属性名="属性内容"]]里面方括号是属性选择器。
-                        var id = data.id  //id是不能用户自己修改的
-                        var username = $(layero).find('[name="username"]').val()
-                        var password = $(layero).find('[name="password"]').val()
-                        var real_name = $(layero).find('[name="real_name"]').val()
-                        var type = $(layero).find('[name="type"]').val()
-                        var is_del = $(layero).find('[name="is_del"]').val()
-                        var img = $(layero).find('[name="img"]').val()
-                        var create_time = data.create_time   //因为创建时间不会变呀
-                        var modify_time = $(layero).find('[name="modify_time"]').val()
-
-                        form.render();  // 重点:强调: 当界面发生改变时, 记得 重新渲染模块,不然不显示效果
-
-                        //日期时间选择器
-                        laydate.render({
-                            elem: '#updateTime'
-                            , type: 'datetime'
-                        });
-
-                        $.ajax({
-                            url: '/Update1Servlet',
-                            type: 'post',
-                            data: {
-                                "id": id
-                                , "username": username
-                                , "real_name": real_name
-                                , "password": password
-                                , "type": type
-                                , "is_del": is_del
-                                , "img": img
-                                , "create_time": create_time
-                                , "modify_time": modify_time
-                            },
-                            dataType: 'json'
-                        });
-                        layero.close($(layero))
+                        $("#myUpdateSubmit").click();
+                        return false;
                     },
                     btn2: function (index, layero) {
                         alert("我取消了修改")

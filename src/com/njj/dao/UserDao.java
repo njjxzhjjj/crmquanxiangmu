@@ -57,15 +57,15 @@ public class UserDao {
     }
 
 
-    //全查询
-    public List<User> selectAll(){
+    //全查询 查询所有业务员
+    public List<User> selectAllByService(){
         //dao层如何和数据库做对接 ，我们用的知识点叫做jdbc
         //要链接数据库就需要到dbhelper.getconnection()
         //1、步骤1、创建链接对象
         List<User> users=new ArrayList<>();
         Connection connection = DBHelper.getConnection();
         //2、创建sql语句
-        String sql="select * from t_user";
+        String sql="select * from t_user where type=2";
         PreparedStatement ps=null;
         ResultSet rs=null;
         try {

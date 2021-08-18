@@ -127,6 +127,15 @@ public Map  login(String username, String password, HttpServletRequest request){
         return  map;
     }*/
 
-
+//全查业务员
+    public  Map selectAllByService(){
+        UserDao dao = new UserDao();
+        List<User> users = dao.selectAllByService();
+        Map codemap = new HashMap();
+        codemap.put("code",0);//必须和layui的JSON返回的格式一样
+        codemap.put("msg","ok");
+        codemap.put("data",users);
+        return codemap;
+    }
 }
 
