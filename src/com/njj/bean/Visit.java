@@ -1,6 +1,6 @@
 package com.njj.bean;
 
-public class visit {
+public class Visit {
     private int id;
     private int user_id;
     private int cust_id;

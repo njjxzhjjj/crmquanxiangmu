@@ -67,7 +67,8 @@
                         layer.msg(res.msg)
                     }
                     if (res.code==0){
-                        window.location.href="/home.html";
+                        //需要跳转
+                        window.location.href="/home.html?username="+res.username;
                     }
                 },
                 dataType:'json'

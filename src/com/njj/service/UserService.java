@@ -25,6 +25,8 @@ public Map  login(String username, String password, HttpServletRequest request){
         session.setAttribute("user",userFromDB);
         map.put("code",0);
         map.put("msg","登录成功");
+        //给一个账户  给前端渲染
+        map.put("username",username);
         return map;
     }
   }

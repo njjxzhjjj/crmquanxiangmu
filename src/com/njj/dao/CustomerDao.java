@@ -1,5 +1,6 @@
 package com.njj.dao;
 
+import com.njj.bean.Customer;
 import com.njj.util.DBHelper;
 import com.njj.util.PageBeanUtil;
 
@@ -143,9 +144,75 @@ public class CustomerDao {
         return total;
     }
 
+    //新增
+    public int insertCustomer(Customer customer){
+        //第1：创建链接对象
+        Connection connection = DBHelper.getConnection();
+        String sql="insert into t_customer values(null,?,?,?,?,?,?,?,?,?,?)";
+        //第3：预编译sql
+        PreparedStatement ps=null;
+        int i=0;
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1,customer.getCust_name());
+            ps.setString(2,customer.getCust_company());
+            ps.setString(3,customer.getCust_position());
+            ps.setString(4,customer.getCust_phone());
+            ps.setString(5,customer.getCust_birth());
+            ps.setInt(6,customer.getCust_sex());
+            ps.setString(7,customer.getCust_desc());
+            ps.setInt(8,customer.getUser_id());
+            ps.setString(9,customer.getCreate_time());
+            ps.setString(10,customer.getModify_time());
+            //执行
+            i = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return i;
+    }
+
+    //删除主键id来删除
+    public int deletecustomer(Integer id){
+        //1、步骤1、创建链接对象
+        Connection connection = DBHelper.getConnection();
+        //2、sql语句因为添加的数据是变量 ，所以要用?代替
+        String sql="delete from  t_customer where id=?";
+        PreparedStatement ps=null;
+        int i=0;
+        try {
+            //3、预编译
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1,id);
+            System.out.println("dao d id = " + id);
+            //执行
+            i=ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return  i;
+    }
+
+
+
+
+
     public static void main(String[] args) {
         CustomerDao customerDao=new CustomerDao();
-        Map paramMap=new HashMap();
+        //全查
+       /* Map paramMap=new HashMap();
         paramMap.put("page","1");
        paramMap.put("limit","5");
        // paramMap.put("cust_name","李小花");
@@ -156,6 +223,26 @@ public class CustomerDao {
 
         //总数
         int i=customerDao.selectAllParamCount(paramMap);
+        System.out.println("i = " + i);*/
+
+       /*//新增
+        Customer customer = new Customer();
+        customer.setCust_name("我我我");
+        customer.setCust_company(("集团按时"));
+        customer.setCust_position("经理12");
+        customer.setCust_phone("13456784398");
+        customer.setCust_birth("2020-07-08");
+        customer.setCust_sex(2);
+        customer.setCust_desc("技术研发2");
+        customer.setUser_id(38);
+        customer.setCreate_time("2020-09-12");
+        customer.setModify_time("2020-08-08");
+
+        int i = customerDao.addCustomer(customer);
         System.out.println("i = " + i);
+*/
+      /*  //删除
+        int i=customerDao.deletecustomer(19);
+        System.out.println("i = " + i);*/
     }
 }
